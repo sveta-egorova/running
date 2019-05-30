@@ -1,0 +1,237 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form action="/register" method="post">
+        <div class="form-group row">
+            <label for="username_input" class="col-3 col-form-label">Username</label>
+            <div class="col-9">
+                <input autocomplete="off" autofocus class="form-control username" name="username"
+                       placeholder="Username" type="text" id="username_input">
+                <div class="valid-feedback" id="valid-feedback-username" visibility="hidden">
+                    Username available
+                </div>
+                <div class="invalid-feedback" id="invalid-feedback-username" visibility="hidden">
+                    Please choose a different username
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="password_input" class="col-3 col-form-label">Password</label>
+            <div class="col-9">
+                <input class="form-control password" name="password" placeholder="Password" type="password"
+                   id="password_input">
+                <small id="passwordHelp" class="form-text text-muted" visibility="hidden">
+                    Password must be at least 4 characters, no more than 8 characters,
+                </small>
+                <small id="passwordHelp" class="form-text text-muted" visibility="hidden">
+                    and must include at least one upper case letter, one lower case letter, and one numeric digit.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="password_ctrl_input" class="col-3 col-form-label">Password (again)</label>
+            <div class="col-9">
+                <input class="form-control password-control" name="confirmation" placeholder="Password (again)"
+                       type="password" id="password_ctrl_input">
+                <div class="invalid-feedback" id="invalid-feedback-pass" visibility="hidden">
+                    The password does not match
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="name_input" class="col-3 col-form-label">Name</label>
+            <div class="col-9">
+                <input autocomplete="off" class="form-control" name="name" placeholder="Name" type="text"
+                       id="name_input">
+                <div class="invalid-feedback" id="invalid-feedback-name" visibility="hidden">
+                    Please tell us your name
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="birthday_input" class="col-3 col-form-label">Birthday</label>
+            <div class="col-9">
+                <input autocomplete="off" class="form-control" name="birthday" value="1990-01-01" type="date"
+                       id="birthday_input">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="gender_input" class="col-3 col-form-label">Gender</label>
+            <div class="col-9" id="gender_input">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="male">
+                    <label class="form-check-label" for="male">male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                    <label class="form-check-label" for="female">female</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="height_input" class="col-3 col-form-label">Height (in cm)</label>
+            <div class="col-9">
+                <input autocomplete="off" class="form-control" name="height" value="170" type="number"
+                       id="height_input">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="weight_input" class="col-3 col-form-label">Weight (in kg)</label>
+            <div class="col-9">
+                <input autocomplete="off" class="form-control" name="weight" value="70" type="number"
+                       id="weight_input">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="activity_input" class="col-3 col-form-label">Activity level</label>
+            <div class="col-9">
+                <select class="form-control" id="activity_input" name="activity_level">
+                    <option selected>Choose...</option>
+                    <option value="1">Sitting / lying all day</option>
+                    <option value="2">Seated work, no exercise</option>
+                    <option value="3">Seated work, light exercise</option>
+                    <option value="4">Moderately physical work, no exercise</option>
+                    <option value="5">Moderately physical work, light exercise</option>
+                    <option value="6">Moderately physical work, heavy exercise</option>
+                    <option value="7">Heavy work / heavy exercise</option>
+                    <option value="8">Above average physical work / exercise</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="photo_input" class="col-3 col-form-label">Upload photo</label>
+            <div class="col-9">
+                <input type="file" class="form-control-file" id="photo_input">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="custom-control custom-checkbox mb-3">
+                <input class="custom-control-input" type="checkbox" value="" id="check_terms" required>
+                    <label class="custom-control-label" for="check_terms">
+                        Agree to terms and conditions
+                    </label>
+                <div class="invalid-feedback" id="invalid-feedback-terms">
+                    You must agree before submitting.
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" id="button_register" type="submit" disabled>Register</button>
+
+    </form>
+
+    <script>
+        let username = document.querySelector(".username");
+        let feedbackPositive = document.querySelector("#valid-feedback-username");
+        let feedbackNegative = document.querySelector("#invalid-feedback-username");
+        let password = document.querySelector(".password");
+        let passwordControl = document.querySelector(".password-control");
+        let feedbackPassNegative = document.querySelector("#invalid-feedback-pass");
+        let name = document.querySelector(".name");
+        let feedbackNameNegative = document.querySelector("#invalid-feedback-name");
+        {#let termsApproval = document.querySelector("#check_terms");#}
+        {#let feedbackTermsNegative = document.querySelector("#invalid-feedback-terms");#}
+        let button = document.querySelector('#button_register');
+
+        // check if the username appears in the database by sending a request to the server
+        // subsequently change the attributes of a form, submit button and adding comments under the form
+
+        username.oninput = function() {
+            $.get('/check?q=' + username.value, function(data) {
+                if (!data) {
+                    username.classList.add('is-invalid');
+                    username.classList.remove('is-valid');
+                    feedbackPositive.setAttribute('visibility', 'hidden');
+                    feedbackNegative.setAttribute('visibility', 'visible');
+                    button.disabled = true;
+
+                    // alert("Not a valid username!");
+                } else {
+                    username.classList.add('is-valid');
+                    username.classList.remove('is-invalid');
+                    feedbackPositive.setAttribute('visibility', 'visible');
+                    feedbackNegative.setAttribute('visibility', 'hidden');
+                    button.disabled = false;
+                }
+            });
+        };
+
+        // check the matching of a password to a certain pattern
+        // subsequently change the attributes of a form, and submit button
+
+        password.oninput = function() {
+            var passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/g;
+            var result = passwordPattern.test(password.value);
+            if (!result) {
+                password.classList.add('is-invalid');
+                password.classList.remove('is-valid');
+                button.disabled = true;
+            } else {
+                password.classList.add('is-valid');
+                password.classList.remove('is-invalid');
+                button.disabled = false;
+            }
+        };
+
+        // check the matching of a password to a control password
+        // subsequently change the attributes of a form, and submit button
+
+        passwordControl.oninput = function() {
+            if (passwordControl.value != password.value) {
+                passwordControl.classList.add('is-invalid');
+                passwordControl.classList.remove('is-valid');
+                feedbackPassNegative.setAttribute('visibility', 'visible');
+                button.disabled = true;
+            } else {
+                passwordControl.classList.add('is-valid');
+                passwordControl.classList.remove('is-invalid');
+                feedbackPassNegative.setAttribute('visibility', 'hidden');
+                button.disabled = false;
+            }
+        };
+
+        name.oninput = function() {
+            if (!name.value) {
+                name.classList.add('is-invalid');
+                name.classList.remove('is-valid');
+                feedbackNameNegative.setAttribute('visibility', 'visible');
+                button.disabled = true;
+            } else {
+                name.classList.add('is-valid');
+                name.classList.remove('is-invalid');
+                feedbackNameNegative.setAttribute('visibility', 'hidden');
+                button.disabled = false;
+            }
+        };
+        {##}
+        {#termsApproval.oninput = function() {#}
+        {#    if (!name.value) {#}
+        {#        name.classList.add('is-invalid');#}
+        {#        name.classList.remove('is-valid');#}
+        {#        feedbackNameNegative.setAttribute('visibility', 'visible');#}
+        {#        button.disabled = true;#}
+        {#    } else {#}
+        {#        name.classList.add('is-valid');#}
+        {#        name.classList.remove('is-invalid');#}
+        {#        feedbackNameNegative.setAttribute('visibility', 'hidden');#}
+        {#        button.disabled = false;#}
+        {#    }#}
+
+
+    </script>
+
+{% endblock %}

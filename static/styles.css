@@ -1,0 +1,48 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+nav .logo
+{
+    /* size for image in navigation bar */
+    height: 40px;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+}
+
+main .center
+{
+    /* center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+div .balance-text {
+  font-size: 30px;
+}
+
+div .limited-width {
+    max-width: 50%;
+    align-content: center;
+}
