@@ -23,7 +23,6 @@ main
 {
     /* scroll horizontally as needed */
     overflow-x: auto;
-
 }
 
 main .center
