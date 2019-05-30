@@ -1,18 +1,30 @@
+import os
 import re
-
 from tempfile import mkdtemp
+
 from cs50 import SQL
 from flask import Flask, jsonify, redirect, render_template, request, session
 from flask_session import Session
-from helpers import apology, login_required
+from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
+
 from UserRepository import UserRepository
+from helpers import apology, login_required
+
+# Set the file directory to come from the user side
+UPLOAD_FOLDER = 'photos'
+# Set allowed file extensions on the user side
+ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
 
 # Configure application
 app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# Configure the directory for uploaded files
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 # Ensure responses aren't cached
 
@@ -40,6 +52,14 @@ def index():
     """Show information about the user and his runs"""
 
     return render_template("main.html")
+
+@app.route("/check", methods=["GET"])
+def check():
+    """Return true if username available, else false, in JSON format"""
+
+    username = request.args.get("username")
+    username_valid = userRepo.check_username(username)
+    return jsonify(username_valid)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -140,6 +160,20 @@ def register():
         # Remember which user has logged in
         remember_session(request.form.get("username"))
 
+        print("test1")
+
+        # save the users pic if provided
+        file = request.files['file']
+
+        print("test2")
+
+        if file:
+            filename = request.form.get("username") + ".jpg"
+            print("test3")
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        print("test4")
+
         # Redirect user to home page
         return redirect("/")
 
@@ -159,3 +193,15 @@ def remember_session(username):
     """Remember which user has logged in"""
     rows = userRepo.get_info_by_username(username)
     session["user_id"] = rows[0]["user_id"]
+
+
+def errorhandler(e):
+    """Handle error"""
+    if not isinstance(e, HTTPException):
+        e = InternalServerError()
+    return apology(e.name, e.code)
+
+
+# Listen for errors
+for code in default_exceptions:
+    app.errorhandler(code)(errorhandler)

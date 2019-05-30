@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/register" method="post">
+    <form action="/register" method="post" enctype="multipart/form-data">
         <div class="form-group row">
             <label for="username_input" class="col-3 col-form-label">Username</label>
             <div class="col-9">
@@ -114,7 +114,7 @@
         <div class="form-group row">
             <label for="photo_input" class="col-3 col-form-label">Upload photo</label>
             <div class="col-9">
-                <input type="file" class="form-control-file" id="photo_input">
+                <input type="file" class="form-control-file" name="file" id="photo_input">
             </div>
         </div>
 
@@ -130,7 +130,7 @@
             </div>
         </div>
 
-        <button class="btn btn-primary" id="button_register" type="submit" disabled>Register</button>
+        <button class="btn btn-primary button-coral" id="button_register" type="submit" disabled>Register</button>
 
     </form>
 
@@ -151,7 +151,7 @@
         // subsequently change the attributes of a form, submit button and adding comments under the form
 
         username.oninput = function() {
-            $.get('/check?q=' + username.value, function(data) {
+            $.get('/check?username=' + username.value, function(data) {
                 if (!data) {
                     username.classList.add('is-invalid');
                     username.classList.remove('is-valid');

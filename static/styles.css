@@ -45,3 +45,21 @@ div .limited-width {
     max-width: 50%;
     align-content: center;
 }
+
+main .btn-primary {
+    color: white;
+    background-color: #ff7f50 !important;
+    border-color: #ff7f50 !important;
+}
+
+main .btn-primary:hover {
+    color: white;
+    background-color: #ff661a !important;
+    border-color: #ff661a !important;
+}
+
+main .btn-primary:disabled {
+    color: white;
+    background-color: #ffbb99 !important;
+    border-color: #ffbb99 !important;
+}
