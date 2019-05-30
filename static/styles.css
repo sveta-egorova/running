@@ -1,7 +1,8 @@
 nav .navbar-brand
 {
-    /* size for brand */
-    font-size: xx-large;
+    /* size and font for brand */
+    font-size: 40px;
+    font-family: 'Kaushan Script', cursive;
 }
 
 nav .logo
@@ -9,6 +10,46 @@ nav .logo
     /* size for image in navigation bar */
     height: 40px;
 }
+
+main .welcome-img
+{
+    /* set opacity */
+    opacity: 0.3;
+}
+
+main .welcome-slogan
+{
+    /* set text box on the image */
+    background-color: coral;
+    color: white;
+    font-family: 'Raleway', sans-serif;
+    font-size: 48px;
+    padding: 16px 32px;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+main .welcome-container
+{
+    /* set the relative position of welcome boxes */
+    position: relative;
+}
+
+main .welcome-text
+{
+    /* set the coordinate and the font of welcome text */
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 350px;
+    background-color: black;
+    opacity: 0.5;
+    color: white;
+    padding: 30px;
+    font-size: 30px;
+    font-family: 'Oswald', sans-serif;
+}
+
 
 main .form-control
 {

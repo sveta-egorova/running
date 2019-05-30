@@ -45,10 +45,16 @@ Session(app)
 db = SQL("sqlite:///running.db")
 userRepo = UserRepository(db)
 
-
-@app.route("/")
-@login_required
+@app.route("/", methods=["GET"])
 def index():
+    """Show welcome page"""
+
+    return render_template("index.html")
+
+
+@app.route("/main", methods=["GET"])
+@login_required
+def main():
     """Show information about the user and his runs"""
 
     return render_template("main.html")
@@ -91,7 +97,7 @@ def login():
         remember_session(username)
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/main")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -167,7 +173,7 @@ def register():
 
         print("test2")
 
-        if file:
+        if file and allowed_file(file.filename):
             filename = request.form.get("username") + ".jpg"
             print("test3")
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -175,7 +181,7 @@ def register():
         print("test4")
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/main")
 
 
 @app.route("/logout", methods=["GET"])
@@ -186,7 +192,7 @@ def logout():
     session.clear()
 
     # Redirect user to login form
-    return redirect("/")
+    return redirect("/index")
 
 
 def remember_session(username):
@@ -205,3 +211,8 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
