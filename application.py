@@ -1,3 +1,4 @@
+import datetime
 import os
 import re
 from tempfile import mkdtemp
@@ -8,6 +9,7 @@ from flask_session import Session
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from HistoryRepository import HistoryRepository
 from UserRepository import UserRepository
 from helpers import apology, login_required
 
@@ -44,6 +46,7 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///running.db")
 userRepo = UserRepository(db)
+historyRepo = HistoryRepository(db)
 
 @app.route("/", methods=["GET"])
 def index():
@@ -59,12 +62,14 @@ def main():
 
     return render_template("main.html")
 
+
 @app.route("/info", methods=["GET"])
 @login_required
 def info():
     """Show information about the user"""
 
     return render_template("info.html")
+
 
 @app.route("/check", methods=["GET"])
 def check():
@@ -73,6 +78,52 @@ def check():
     username = request.args.get("username")
     username_valid = userRepo.check_username(username)
     return jsonify(username_valid)
+
+
+@app.route("/log-run", methods=["GET", "POST"])
+@login_required
+def log_run():
+    """Log the latest training of the user"""
+
+    # User reached route via GET (as by submitting a form via GET)
+    if request.method == "GET":
+        date = datetime.datetime.now()
+        time_now = date.strftime('%d/%m/%Y, %H:%M')
+        print(time_now)
+        return render_template("log-run.html", time=time_now)
+
+    # User reached route via POST (as by submitting a form via POST)
+    else:
+
+        # Ensure distance was given
+        if not request.form.get("distance"):
+            return apology("please provide run distance", 403)
+
+        pace = request.form.get("duration")/request.form.get("distance")
+
+        temperature = 20
+        humidity = "sunny"
+        calories = 1000
+
+        # Add training to database
+        historyRepo.add_run(session["user_id"],
+                            request.form.get("type"),
+                            request.form.get("date"),
+                            request.form.get("distance"),
+                            request.form.get("duration"),
+                            request.form.get("elevation"),
+                            pace,
+                            request.form.get("heartrate_avg"),
+                            request.form.get("heartrate_high"),
+                            request.form.get("location"),
+                            temperature,
+                            humidity,
+                            calories)
+
+        # Redirect user to home page
+        return redirect("/main")
+
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -173,19 +224,19 @@ def register():
         # Remember which user has logged in
         remember_session(request.form.get("username"))
 
-        print("test1")
+        # print("test1")
 
         # save the users pic if provided
         file = request.files['file']
 
-        print("test2")
+        # print("test2")
 
         if file and allowed_file(file.filename):
             filename = request.form.get("username") + ".jpg"
-            print("test3")
+            # print("test3")
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        print("test4")
+        # print("test4")
 
         # Redirect user to home page
         return redirect("/main")

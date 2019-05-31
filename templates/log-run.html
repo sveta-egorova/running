@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+
+{% block main %}
+    <p class="text-main-line except-main">Log your run</p>
+    <div class="container p-5 under-main-line">
+        <form action="/log-run" method="post">
+
+            <div class="form-group row">
+                <label for="type_input" class="col-3 col-form-label">Training type</label>
+                <div class="col-9 training-checkboxes" id="type_input">
+                    <div class="form-group row">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="run" value="1">
+                            <label class="form-check-label" for="run">Running</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="walk" value="2">
+                            <label class="form-check-label" for="walk">Walking</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="climb" value="3">
+                            <label class="form-check-label" for="climb">Hiking / climbing</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="on_treadmill">
+                                Treadmill
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="datetime_input" class="col-3 col-form-label">Date and time</label>
+                <div class="col-9">
+                    <input autocomplete="off" autofocus class="form-control log-run-forms" name="datetime"
+                           type="datetime-local" id="datetime_input">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="location_input" class="col-3 col-form-label">Location</label>
+                <div class="col-9">
+                    <input autocomplete="off" class="form-control log-run-forms" name="location"
+                           type="text" id="location_input">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="distance_input_range" class="col-3 col-form-label">Distance (in km)</label>
+                <div class="col-9">
+                    <span>Distance:</span>
+                    <span id="distance_input_range"></span>
+                    <span> km</span>
+                    <input type="range" class="form-control-range run-slider" min="0.0" max="100.0" step="0.1" value="10.0"
+                           name="distance" id="distance_input_range" oninput="showVal(this.value)"
+                           onchange="showVal(this.value)">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="duration_input" class="col-3 col-form-label">Duration (hh:mm:ss) </label>
+                <div class="col-9">
+                    <input autocomplete="off" class="form-control log-run-forms" value="00:00:00" name="duration"
+                           type="time" id="duration_input">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="elevation_input" class="col-3 col-form-label">Elevation (in m)</label>
+                <div class="col-9">
+                    <input autocomplete="off" class="form-control log-run-forms" name="elevation" type="number"
+                           id="elevation_input">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="heartrate_avg_input" class="col-3 col-form-label">Heartrate (average) in bpm</label>
+                <div class="col-9">
+                    <input autocomplete="off" class="form-control log-run-forms" name="heartrate_avg" type="number"
+                           id="heartrate_avg_input">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="heartrate_high_input" class="col-3 col-form-label">Heartrate (max) in bpm</label>
+                <div class="col-9">
+                    <input autocomplete="off" class="form-control log-run-forms" name="heartrate_high" type="number"
+                           id="heartrate_high_input">
+                </div>
+            </div>
+
+            <button class="btn btn-primary button-coral" id="button_register" type="submit">Submit</button>
+
+        </form>
+    </div>
+
+<script>
+
+    let today = moment().format(moment.HTML5_FMT.DATETIME_LOCAL)
+
+    document.querySelector("#datetime_input").value = today;
+
+    function showVal(newVal){
+      document.getElementById("distance_input_range").innerHTML=newVal;
+    }
+
+{##}
+{#    name.oninput = function() {#}
+{#            if (!name.value) {#}
+{#                name.classList.add('is-invalid');#}
+{#                name.classList.remove('is-valid');#}
+{#                feedbackNameNegative.setAttribute('visibility', 'visible');#}
+{#                button.disabled = true;#}
+{#            } else {#}
+{#                name.classList.add('is-valid');#}
+{#                name.classList.remove('is-invalid');#}
+{#                feedbackNameNegative.setAttribute('visibility', 'hidden');#}
+{#                button.disabled = false;#}
+{#            }#}
+{#        };#}
+{##}
+</script>
+
+{% endblock %}
