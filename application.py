@@ -55,9 +55,16 @@ def index():
 @app.route("/main", methods=["GET"])
 @login_required
 def main():
-    """Show information about the user and his runs"""
+    """Show information about the user's runs"""
 
     return render_template("main.html")
+
+@app.route("/info", methods=["GET"])
+@login_required
+def info():
+    """Show information about the user"""
+
+    return render_template("info.html")
 
 @app.route("/check", methods=["GET"])
 def check():

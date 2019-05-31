@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User info
+{% endblock %}
+
+{% block main %}
+
+    <p class="text-main-line">Svetlana</p>
+    <div class="container p-5">
+        <div class="row user-info">
+            <div class="col-md-4">
+                <img src="/static/sveta.jpg" alt="photo" class="img-thumbnail">
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-5">Gender:</div>
+                    <div class="col-md-7">female</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">Age:</div>
+                    <div class="col-md-7">27</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">Height:</div>
+                    <div class="col-md-7">170cm</div>
+                 </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-5">Weight:</div>
+                    <div class="col-md-5">70kg</div>
+                    <div class="col-md-2">
+                        <a href="/" class="badge badge-secondary">Change</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">Activity level:</div>
+                    <div class="col-md-5">Moderate</div>
+                    <div class="col-md-2">
+                        <a href="/" class="badge badge-secondary">Change</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">BMR:</div>
+                    <div class="col-md-7">2400 kcal</div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

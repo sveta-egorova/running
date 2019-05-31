@@ -17,14 +17,22 @@ main .welcome-img
     opacity: 0.3;
 }
 
-main .welcome-slogan
+main .user-info
+{
+    /* font used for user info */
+    font-size: 24px;
+    font-family: 'Oswald', sans-serif;
+    color: #737373;
+}
+
+main .text-main-line
 {
     /* set text box on the image */
     background-color: coral;
     color: white;
     font-family: 'Raleway', sans-serif;
     font-size: 48px;
-    padding: 16px 32px;
+    padding-bottom: 8px;
     text-align: center;
     margin-bottom: 0;
 }
