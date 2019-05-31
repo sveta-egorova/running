@@ -1,4 +1,5 @@
 import datetime
+import json
 import os
 import re
 from tempfile import mkdtemp
@@ -13,8 +14,11 @@ from HistoryRepository import HistoryRepository
 from UserRepository import UserRepository
 from helpers import apology, login_required
 
-# Initialize an empty list with cities
 CITIES = []
+
+# Initialize an empty list with cities
+with open('static/citylist.json') as json_file:
+    CITIES = json.load(json_file)
 
 
 # Set the file directory to come from the user side
@@ -75,13 +79,29 @@ def info():
     return render_template("info.html")
 
 
-@app.route("/check", methods=["GET"])
+@app.route("/weather", methods=["GET"])
+@login_required
+def weather():
+    """Show information about the user"""
+
+    return render_template("weather.html")
+
+
+@app.route("/check-username")
 def check():
     """Return true if username available, else false, in JSON format"""
 
     username = request.args.get("username")
     username_valid = userRepo.check_username(username)
     return jsonify(username_valid)
+
+
+@app.route("/search-location")
+def search():
+    q = request.args.get("term")
+    city_list = [{"value": city["name"] + ", " + city["country"], "id": city["id"]}
+                 for city in CITIES if q and city["name"].lower().startswith(q.lower())]
+    return jsonify(city_list)
 
 
 @app.route("/log-run", methods=["GET", "POST"])
@@ -254,7 +274,7 @@ def logout():
     session.clear()
 
     # Redirect user to login form
-    return redirect("/index")
+    return redirect("/")
 
 
 def remember_session(username):

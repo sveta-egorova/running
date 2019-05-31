@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Weather
+{% endblock %}
+
+{% block main %}
+
+
+    <div class="container p-5">
+        <div class="form-group">
+            <input class="form-control autocomplete" placeholder="Enter city">
+        </div>
+
+
+        <ul id="city_list"></ul>
+    </div>
+
+    <script>
+        {#let input = document.querySelector('input');#}
+
+        {#let req = { term: "Mi" }        #}
+
+        {#function fetchData(input, response) {#}
+        {#    function display(cities) {#}
+        {#        let res = []#}
+        {#        for (city of cities) {#}
+        {#            res.push({#}
+        {#                label: city["name"] + " , " + city["country"],#}
+        {#                value: city["id"]#}
+        {#            })#}
+        {#        }#}
+        {#        response(res)#}
+        {#    }#}
+        {##}
+        {#    $.get('/search-location?q=' + input["term"].toLowerCase(), display)}#}
+
+        $('.autocomplete').autocomplete({
+            minLength: 3,
+            source: "/search-location"
+        });
+        $(".autocomplete").on( "autocompleteselect", function( event, ui ) {console.log(ui)} );
+
+
+    </script>
+
+{% endblock %}
+
+
