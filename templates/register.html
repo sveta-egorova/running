@@ -153,7 +153,7 @@
         // subsequently change the attributes of a form, submit button and adding comments under the form
 
         username.oninput = function() {
-            $.get('/check?username=' + username.value, function(data) {
+            $.get('/check-username?username=' + username.value, function(data) {
                 if (!data) {
                     username.classList.add('is-invalid');
                     username.classList.remove('is-valid');
