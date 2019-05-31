@@ -13,6 +13,10 @@ from HistoryRepository import HistoryRepository
 from UserRepository import UserRepository
 from helpers import apology, login_required
 
+# Initialize an empty list with cities
+CITIES = []
+
+
 # Set the file directory to come from the user side
 UPLOAD_FOLDER = 'photos'
 # Set allowed file extensions on the user side

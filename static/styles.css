@@ -123,6 +123,15 @@ main .center
     text-align: center;
 }
 
+footer
+{
+    /* center footer */
+    display: grid !important;
+    justify-content: center !important;
+    text-align: center;
+    background: rgba(255,255,255,0.5);
+}
+
 main img
 {
     /* constrain images on small screens */
@@ -207,6 +216,14 @@ input[type=range]::-webkit-slider-thumb {
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
 }
 
+
+/*footer {*/
+/*  position: relative;*/
+/*  margin-top: -70px; !* negative value of footer height *!*/
+/*  height: 50px;*/
+/*  clear:both;*/
+/*  !*padding-top:20px;*!*/
+/*}*/
 
 /*input[type=range]:focus::-webkit-slider-runnable-track {*/
 /*  background: #367ebd;*/
