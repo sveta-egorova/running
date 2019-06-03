@@ -1,25 +1,19 @@
 import datetime
-import json
 import os
 import re
+import time
 from tempfile import mkdtemp
 
 from cs50 import SQL
 from flask import Flask, jsonify, redirect, render_template, request, session
 from flask_session import Session
+from pytz import timezone
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from HistoryRepository import HistoryRepository
 from UserRepository import UserRepository
-from helpers import apology, login_required
-
-CITIES = []
-
-# Initialize an empty list with cities
-with open('static/citylist.json') as json_file:
-    CITIES = json.load(json_file)
-
+from helpers import apology, login_required, check_weather, get_city_list, count_calories, show_pace, show_duration
 
 # Set the file directory to come from the user side
 UPLOAD_FOLDER = 'photos'
@@ -79,12 +73,26 @@ def info():
     return render_template("info.html")
 
 
-@app.route("/weather", methods=["GET"])
+@app.route("/weather", methods=["GET", "POST"])
 @login_required
 def weather():
-    """Show information about the user"""
+    """Prompts user to choose the city where check weather"""
 
-    return render_template("weather.html")
+    # User reached route via GET (as by submitting a form via GET)
+    if request.method == "GET":
+        return render_template("weather.html")
+
+    # User reached route via POST (as by submitting a form via POST)
+    else:
+        location = request.form.get("location")
+        latitude = request.form.get("city_latitude")
+        longitude = request.form.get("city_longitude")
+        cur_weather = check_weather(latitude, longitude)
+        cur_weather["temperature"] = round(cur_weather["temperature"])
+        return render_template("weather-now.html", weather=cur_weather, location=location)
+# TODO add units of measure
+# icon can be one of the following: clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day,
+# or partly-cloudy-night
 
 
 @app.route("/check-username")
@@ -113,7 +121,7 @@ def log_run():
     if request.method == "GET":
         date = datetime.datetime.now()
         time_now = date.strftime('%d/%m/%Y, %H:%M')
-        print(time_now)
+        # print(time_now)
         return render_template("log-run.html", time=time_now)
 
     # User reached route via POST (as by submitting a form via POST)

@@ -41,6 +41,7 @@
                 <div class="col-9">
                     <input autocomplete="off" autofocus class="form-control log-run-forms" name="datetime"
                            type="datetime-local" id="datetime_input">
+                    <input name="timezone" id="cur_timezone" hidden>
                 </div>
             </div>
 
@@ -104,8 +105,11 @@
 <script>
 
     let today = moment().format(moment.HTML5_FMT.DATETIME_LOCAL)
-
     document.querySelector("#datetime_input").value = today;
+
+    let timezone = moment.tz.guess();
+    document.getElementById("cur_timezone").value = timezone;
+
 
     function showVal(newVal){
       document.getElementById("distance_input_range").innerHTML=newVal;

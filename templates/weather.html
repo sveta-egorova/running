@@ -5,42 +5,32 @@
 {% endblock %}
 
 {% block main %}
-
-
+    <p class="text-main-line except-main">Check current weather conditions</p>
     <div class="container p-5">
-        <div class="form-group">
-            <input class="form-control autocomplete" placeholder="Enter city">
-        </div>
-
-
-        <ul id="city_list"></ul>
+        <form action="/weather" method="post">
+            <div class="form-group">
+                <input class="form-control autocomplete log-run-forms" autocomplete="off" name="location"
+                       id="location_input" placeholder="city name">
+                <input name="city_latitude" id="city_latitude" hidden>
+                <input name="city_longitude" id="city_longitude" hidden>
+            </div>
+            <button class="btn btn-primary button-coral" id="button_check" type="submit">Check</button>
+        </form>
     </div>
 
     <script>
-        {#let input = document.querySelector('input');#}
-
-        {#let req = { term: "Mi" }        #}
-
-        {#function fetchData(input, response) {#}
-        {#    function display(cities) {#}
-        {#        let res = []#}
-        {#        for (city of cities) {#}
-        {#            res.push({#}
-        {#                label: city["name"] + " , " + city["country"],#}
-        {#                value: city["id"]#}
-        {#            })#}
-        {#        }#}
-        {#        response(res)#}
-        {#    }#}
-        {##}
-        {#    $.get('/search-location?q=' + input["term"].toLowerCase(), display)}#}
 
         $('.autocomplete').autocomplete({
             minLength: 3,
             source: "/search-location"
         });
-        $(".autocomplete").on( "autocompleteselect", function( event, ui ) {console.log(ui)} );
 
+        function handleSelect(event, selectedItem) {
+            document.getElementById("city_latitude").value = selectedItem["item"]["latitude"] //selectedItem.item.latitude
+            document.getElementById("city_longitude").value = selectedItem["item"]["longitude"] //selectedItem.item.longitude
+        }
+
+        $(".autocomplete").on("autocompleteselect", handleSelect);
 
     </script>
 

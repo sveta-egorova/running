@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Current weather
+{% endblock %}
+{% block main %}
+
+    <form action="/weather" method="post">
+        <p class="text-main-line except-main">Here is the current weather in {{ location }}</p>
+        <div class="container p-5 text-info">
+            <div class="row">
+                <div class="col-3">Summary</div>
+                <div class="col-3">{{ weather["summary"] }}</div>
+            </div>
+            <div class="row">
+                <div class="col-3">Temperature</div>
+                <div class="col-3">{{ weather["temperature"] }} Degrees Celcius</div>
+            </div>
+            <div class="row">
+                <div class="col-3">Humidity</div>
+                <div class="col-3">{{ weather["humidity"]*100 }} %</div>
+            </div>
+            <div class="row">
+                <div class="col-3">Pressure</div>
+                <div class="col-3">{{ weather["pressure"] }} Hectopascals</div>
+            </div>
+
+            <img src="/static/weather icons/{{ weather["icon"] }}.png" alt="weather-type">
+
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

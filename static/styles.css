@@ -37,12 +37,12 @@ main .run-slider
 
 }
 
-main .user-info
+main .text-info
 {
     /* font used for user info */
     font-size: 24px;
     font-family: 'Oswald', sans-serif;
-    color: #737373;
+    color: #626262 !important;
 }
 
 main .col-form-label
@@ -80,10 +80,22 @@ main .under-main-line
     padding-bottom: 0px !important;
 }
 
+main .duration_input
+{
+    /* set the width of duration boxes */
+    width: 70px !important;
+}
+
 main .welcome-container
 {
     /* set the relative position of welcome boxes */
     position: relative;
+}
+
+main .weather-image
+{
+    /* set the flexible height of the call with image */
+    height: auto;
 }
 
 main .welcome-text
