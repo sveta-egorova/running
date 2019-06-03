@@ -46,10 +46,12 @@
             </div>
 
             <div class="form-group row">
-                <label for="location_input" class="col-3 col-form-label">Location</label>
+                <label for="location_input" class="col-3 col-form-label">City</label>
                 <div class="col-9">
-                    <input autocomplete="off" class="form-control log-run-forms" name="location"
-                           type="text" id="location_input">
+                    <input class="form-control autocomplete log-run-forms" name="location"
+                           id="location_input">
+                    <input name="city_latitude" id="city_latitude" hidden>
+                    <input name="city_longitude" id="city_longitude" hidden>
                 </div>
             </div>
 
@@ -115,21 +117,17 @@
       document.getElementById("distance_input_range").innerHTML=newVal;
     }
 
-{##}
-{#    name.oninput = function() {#}
-{#            if (!name.value) {#}
-{#                name.classList.add('is-invalid');#}
-{#                name.classList.remove('is-valid');#}
-{#                feedbackNameNegative.setAttribute('visibility', 'visible');#}
-{#                button.disabled = true;#}
-{#            } else {#}
-{#                name.classList.add('is-valid');#}
-{#                name.classList.remove('is-invalid');#}
-{#                feedbackNameNegative.setAttribute('visibility', 'hidden');#}
-{#                button.disabled = false;#}
-{#            }#}
-{#        };#}
-{##}
+    $('.autocomplete').autocomplete({
+        minLength: 3,
+        source: "/search-location"
+    });
+    function handleSelect( event, selectedItem ) {
+        document.getElementById("city_latitude").value = selectedItem["item"]["latitude"] //selectedItem.item.latitude
+        document.getElementById("city_longitude").value = selectedItem["item"]["longitude"] //selectedItem.item.longitude
+    }
+    $(".autocomplete").on( "autocompleteselect", handleSelect);
+
+
 </script>
 
 {% endblock %}

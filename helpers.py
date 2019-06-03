@@ -62,3 +62,27 @@ def check_weather(latitude, longitude, timestamp=None):
         }
     except (KeyError, TypeError, ValueError):
         return None
+
+
+def get_city_list(q):
+    """Lookup the list of cities with their attributes based on the user input"""
+
+    # Contact API
+    url = f"https://wft-geo-db.p.rapidapi.com/v1/geo/cities?limit=10&namePrefix={q.lower()}"
+    headers = {"X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
+                "X-RapidAPI-Key": "a05c649b91msh43e569e10289861p12ff56jsn045debbbd7bc"}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
+
+    # Parse response
+    try:
+        cities = json.loads(response.content)["data"]
+        city_list = [{"value": city["name"] + ", " + city["country"], "latitude": city["latitude"],
+                    "longitude": city["longitude"]} for city in cities]
+        return jsonify(city_list)
+    except (KeyError, TypeError, ValueError):
+        return None
+

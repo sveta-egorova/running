@@ -106,10 +106,10 @@ def check():
 
 @app.route("/search-location")
 def search():
+    """Find the list of cities and their respective GPS based on the user's string, in JSON format"""
+
     q = request.args.get("term")
-    city_list = [{"value": city["name"] + ", " + city["country"], "id": city["id"]}
-                 for city in CITIES if q and city["name"].lower().startswith(q.lower())]
-    return jsonify(city_list)
+    return get_city_list(q)
 
 
 @app.route("/log-run", methods=["GET", "POST"])
