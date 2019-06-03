@@ -28,7 +28,7 @@
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" name="on_treadmill">
+                                <input type="checkbox" class="form-check-input" name="treadmill">
                                 Treadmill
                             </label>
                         </div>
@@ -70,8 +70,12 @@
             <div class="form-group row">
                 <label for="duration_input" class="col-3 col-form-label">Duration (hh:mm:ss) </label>
                 <div class="col-9">
-                    <input autocomplete="off" class="form-control log-run-forms" value="00:00:00" name="duration"
-                           type="time" id="duration_input">
+                    <input class="form-control duration_input" placeholder="hh" name="hours"
+                           type="number" id="duration_input" min="0" max="9">  :
+                    <input class="form-control duration_input" placeholder="mm" name="minutes"
+                           type="number" id="duration_input" min="0" max="59">  :
+                    <input class="form-control duration_input" placeholder="ss" name="seconds"
+                           type="number" id="duration_input" min="0" max="59">
                 </div>
             </div>
 

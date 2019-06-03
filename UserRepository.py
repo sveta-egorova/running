@@ -21,7 +21,7 @@ class UserRepository:
 
     def get_info_by_id(self, id):
         """Get all info from a database related to a particular username"""
-        return self.db.execute("SELECT * FROM users WHERE id = :id", id = id)
+        return self.db.execute("SELECT * FROM users WHERE user_id = :id", id=id)
 
 
     def check_username(self, username):

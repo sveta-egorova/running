@@ -69,6 +69,7 @@ def main():
 @login_required
 def info():
     """Show information about the user"""
+    # TODO provide real arguments
 
     return render_template("info.html")
 
@@ -96,7 +97,7 @@ def weather():
 
 
 @app.route("/check-username")
-def check():
+def check_username():
     """Return true if username available, else false, in JSON format"""
 
     username = request.args.get("username")

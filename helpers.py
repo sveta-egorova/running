@@ -1,7 +1,8 @@
+import json
 from functools import wraps
 
 import requests
-from flask import redirect, render_template, session
+from flask import redirect, render_template, session, jsonify
 
 
 def login_required(f):
