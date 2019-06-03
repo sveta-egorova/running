@@ -86,3 +86,61 @@ def get_city_list(q):
     except (KeyError, TypeError, ValueError):
         return None
 
+
+def count_calories(run_type, pace, weight, seconds):
+
+    MET = 0
+    if run_type == 1:
+        if pace >= 447:
+            MET = 8.3
+        elif pace >= 428:
+            MET = 9
+        elif pace >= 372:
+            MET = 9.8
+        elif pace >= 335:
+            MET = 10.5
+        elif pace >= 316:
+            MET = 11
+        elif pace >= 298:
+            MET = 11.8
+        elif pace >= 279:
+            MET = 11.8
+        elif pace >= 260:
+            MET = 12.3
+        elif pace >= 242:
+            MET = 12.8
+        elif pace >= 223:
+            MET = 14.5
+        elif pace >= 205:
+            MET = 16
+        elif pace >= 186:
+            MET = 19
+        elif pace >= 171:
+            MET = 19.8
+        elif pace >= 160:
+            MET = 23
+# TODO implement MET with tuples
+
+    calories_burnt = round(MET * weight * seconds / 3600,0)
+
+    return calories_burnt
+
+
+def show_duration(total_seconds):
+    hours = int(total_seconds / 3600)
+    hours_adj = str(hours) if int(hours) > 9 else "0" + str(hours)
+    minutes = int((total_seconds - hours * 3600) / 60)
+    minutes_adj = str(minutes) if int(minutes) > 9 else "0" + str(minutes)
+    seconds = total_seconds - hours * 3600 - minutes * 60
+    seconds_adj = str(seconds) if int(seconds) > 9 else "0" + str(seconds)
+    duration_string = hours_adj + ":" + minutes_adj + ":" + seconds_adj
+    return duration_string
+
+# "01:35:14 min/km"
+
+
+def show_pace(pace):
+    minutes_per_km = int(pace / 60)
+    seconds_remainder = pace - minutes_per_km * 60
+    pace_string = str(minutes_per_km) + ":" + str(seconds_remainder) + "min/km"
+    return pace_string

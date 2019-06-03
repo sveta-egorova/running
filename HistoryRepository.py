@@ -3,13 +3,15 @@ class HistoryRepository:
         self.db = db
 
     def add_run(self, user_id, type, date, distance, duration, elevation, pace, heartrate_avg, heartrate_high,
-                location, temperature, humidity, calories):
+                temperature, humidity, calories, treadmill, latitude, longitude, timezone):
         """Add a new training to the database"""
 
-        self.db.execute("INSERT INTO trainings (user_id, type, date, distance, duration, elevation, pace, heartrate_avg, "
-                        "heartrate_high, location, temperature, humidity, calories) "
+        self.db.execute("INSERT INTO trainings (user_id, type, date, distance, duration, elevation, pace, "
+                        "heartrate_avg, heartrate_high, temperature, humidity, calories, treadmill, latitude,"
+                        "longitude, timezone) "
                         "VALUES(:user_id, :type, :date, :distance, :duration, :elevation, :pace, :heartrate_avg, "
-                        ":heartrate_high, :location, :temperature, :humidity, :calories)",
+                        ":heartrate_high, :temperature, :humidity, :calories, :treadmill, :latitude, :longitude, "
+                        ":timezone)",
                         user_id=user_id,
                         type=type,
                         date=date,
@@ -19,12 +21,16 @@ class HistoryRepository:
                         pace=pace,
                         heartrate_avg=heartrate_avg,
                         heartrate_high=heartrate_high,
-                        location=location,
                         temperature=temperature,
                         humidity=humidity,
-                        calories=calories)
+                        calories=calories,
+                        treadmill=treadmill,
+                        latitude=latitude,
+                        longitude=longitude,
+                        timezone=timezone)
 
 
     def get_runs_by_id(self, id):
         """Get all info from a database related to a particular username"""
-        return self.db.execute("SELECT * FROM trainings WHERE id = :id", id = id)
+        return self.db.execute("SELECT * FROM trainings WHERE user_id = :id", id = id)
+

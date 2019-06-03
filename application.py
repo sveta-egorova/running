@@ -131,30 +131,100 @@ def log_run():
         if not request.form.get("distance"):
             return apology("please provide run distance", 403)
 
-        pace = request.form.get("duration")/request.form.get("distance")
+        # define running type
+        run_type = int(request.form.get("type"))  # string of values 1,2,3
+        treadmill = 1 if request.form.get("treadmill") else 0  # string or nonetype
 
-        temperature = 20
-        humidity = "sunny"
-        calories = 1000
+        # create timezone object
+        timezone_string = request.form.get("timezone")
+        run_timezone = timezone(timezone_string)
+
+        # create datetime object
+        run_datetime_string = request.form.get("datetime")  # string
+        run_datetime_naive = datetime.datetime.strptime(run_datetime_string, '%Y-%m-%dT%H:%M')
+
+        # combine both datetime and timezone
+        run_datetime = run_timezone.localize(run_datetime_naive, is_dst=None)
+        run_datetime_unix = int(time.mktime(run_datetime.timetuple()))
+
+        # TODO to check correct date and time of the run on the user interface
+
+        distance = float(request.form.get("distance")) # string
+
+        # calculate duration and pace
+        hours = request.form.get("hours") or 0  # string
+        minutes = request.form.get("minutes") or 0  # string
+        seconds = request.form.get("seconds") or 0  # string
+        total_seconds = int(hours) * 3600 + int(minutes) * 60 + int(seconds)
+        pace = int(total_seconds / distance)
+
+        # TODO autoscroll of numbers
+
+        elevation = float(request.form.get("elevation")) or 0  # string
+
+        heartrate_avg = int(request.form.get("heartrate_avg")) or 0  # string
+        heartrate_high = int(request.form.get("heartrate_high")) or 0  # string
+
+        location = request.form.get("location")  # string
+
+        # TODO activate API data upload for temperature and humidity
+        latitude = request.form.get("city_latitude")
+        longitude = request.form.get("city_longitude")
+        cur_weather = check_weather(latitude, longitude)
+        temperature = round(cur_weather["temperature"],0)
+        humidity = cur_weather["humidity"]
+
+        # Count calories burnt during the training
+        rows = userRepo.get_info_by_id(session["user_id"])
+        weight = rows[0]["weight"]
+        calories_burnt = count_calories(run_type, pace, weight, total_seconds)
 
         # Add training to database
         historyRepo.add_run(session["user_id"],
-                            request.form.get("type"),
-                            request.form.get("date"),
-                            request.form.get("distance"),
-                            request.form.get("duration"),
-                            request.form.get("elevation"),
+                            run_type,
+                            run_datetime_unix,
+                            distance,
+                            total_seconds,
+                            elevation,
                             pace,
-                            request.form.get("heartrate_avg"),
-                            request.form.get("heartrate_high"),
-                            request.form.get("location"),
+                            heartrate_avg,
+                            heartrate_high,
                             temperature,
                             humidity,
-                            calories)
+                            calories_burnt,
+                            treadmill,
+                            latitude,
+                            longitude,
+                            timezone_string)
 
         # Redirect user to home page
-        return redirect("/main")
+        return redirect("/history")
 
+
+@app.route("/history", methods=["GET"])
+@login_required
+def see_history():
+    """Show the latest training of the user"""
+
+    runs = historyRepo.get_runs_by_id(session["user_id"])
+
+    run_types = {"1":"running", "2": "walking", "3": "hiking/climbing"}
+    for run in runs:
+        run_type = run["type"]
+        run["type"] = run_types[str(run_type)]
+        run_timezone = timezone(run["timezone"])
+        datetime_object = datetime.datetime.fromtimestamp(run["date"], tz=run_timezone)
+        run_date = datetime_object.date()
+        run["day"] = run_date
+        run_time = datetime_object.time()
+        run["time"] = run_time
+        duration_string = show_duration(run["duration"])
+        run["duration"] = duration_string
+        pace_string = show_pace(run["pace"])
+        run["pace"] = pace_string
+
+    return render_template("history.html",
+                           runs=runs)
 
 
 @app.route("/login", methods=["GET", "POST"])

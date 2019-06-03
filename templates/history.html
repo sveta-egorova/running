@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User history
+{% endblock %}
+
+{% block main %}
+
+    <p class="text-main-line except-main">Your run history</p>
+    <div class="container p-5 under-main-line">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+                <th scope="col">Type</th>
+                <th scope="col">Distance (km)</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Avg pace</th>
+                <th scope="col">Calories</th>
+                <th scope="col">Elevation (m)</th>
+                <th scope="col">Avg heartrate (bpm)</th>
+                <th scope="col">Temperature</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in runs %}
+                <tr>
+                    <td> {{ item['day'] }} </td>
+                    <td> {{ item['time'] }} </td>
+                    <td> {{ item['type'] }} </td>
+                    <td> {{ item['distance'] }} </td>
+                    <td> {{ item['duration'] }} </td>
+                    <td> {{ item['pace'] }} </td>
+                    <td> {{ item['calories'] }} </td>
+                    <td> {{ item['elevation'] }} </td>
+                    <td> {{ item['heartrate_avg'] }} </td>
+                    <td> {{ item['temperature'] }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
