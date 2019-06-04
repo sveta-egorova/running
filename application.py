@@ -65,20 +65,13 @@ def index():
 def main():
     """Show information about the user's runs"""
 
-    # get user IP and find respective location, weather and timezone information
-    user_ip = request.remote_addr
-    # if the application is run locally, replace the internal IP with the external one
-    if user_ip == "127.0.0.1":
-        user_ip = "151.36.210.23"
-    location_object = get_location_by_ip(user_ip)
-    weather_now = check_weather(location_object["latitude"], location_object["longitude"])
-    location_now = location_object["city"] + ", " + location_object["country"]
-    user_timezone_string = weather_now["timezone"]
+    location = get_location_string(request)
+    weather_now = get_cur_weather(request)
+    timezone_now = get_cur_timezone(request)
 
     # based on the user timezone and current time, create a datetime object to reflect on the interface and
     # aggregate runs
-    user_timezone_object = timezone(user_timezone_string)
-    cur_datetime = datetime.datetime.now(tz=user_timezone_object)
+    cur_datetime = datetime.datetime.now(tz=timezone_now)
     cur_date = cur_datetime.date()
     cur_week = cur_date.strftime("%W")
 
@@ -129,7 +122,7 @@ def main():
     # TODO add data about next run according to the program
 
     return render_template("main.html",
-                           location=location_now,
+                           location=location,
                            weather=weather_now,
                            latest_run=latest_run,
                            when=delta_message,

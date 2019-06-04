@@ -3,6 +3,7 @@ from functools import wraps
 
 import requests
 from flask import redirect, render_template, session, jsonify
+from pytz import timezone
 
 
 def login_required(f):
@@ -17,6 +18,7 @@ def login_required(f):
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
 
 def apology(message, code=400):
     """Render message as an apology to user."""
@@ -171,3 +173,29 @@ def show_pace(pace):
     seconds_remainder = pace - minutes_per_km * 60
     pace_string = str(minutes_per_km) + ":" + str(seconds_remainder) + " min/km"
     return pace_string
+
+
+def get_user_ip(request):
+    # get user IP and find respective location, weather and timezone information
+    user_ip = request.remote_addr
+    # if the application is run locally, replace the internal IP with the external one
+    if user_ip == "127.0.0.1":
+        user_ip = "151.36.210.23"
+    return user_ip
+
+
+def get_cur_weather(request):
+    user_ip = get_user_ip(request)
+    cur_location = get_location_by_ip(user_ip)
+    return check_weather(cur_location["latitude"], cur_location["longitude"])
+
+
+def get_location_string(request):
+    user_ip = get_user_ip(request)
+    cur_location = get_location_by_ip(user_ip)
+    return cur_location["city"] + ", " + cur_location["country"]
+
+
+def get_cur_timezone(request):
+    local_data = get_cur_weather(request)
+    return timezone(local_data["timezone"])

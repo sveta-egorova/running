@@ -22,7 +22,7 @@ class UserRepository:
     def get_info_by_id(self, id):
         """Get all info from a database related to a particular username"""
         return self.db.execute("SELECT * FROM users WHERE user_id = :id", id=id)
-
+# TODO refactor id column names
 
     def check_username(self, username):
         """Query database to determine if chosen username is valid"""
