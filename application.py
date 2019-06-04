@@ -84,7 +84,7 @@ def main():
 
     # data about latest run
     runs = historyRepo.get_runs_by_user_id(session["user_id"])
-    zero_timestamp = datetime.datetime.min.timestamp()
+    zero_timestamp = 0
     latest_run = {}
     km_in_month = 0
     km_in_week = 0
@@ -289,7 +289,12 @@ def see_history():
             "day": datetime_object.date(),
             "time": datetime_object.time(),
             "duration": show_duration(run["duration"]),
-            "pace": show_pace(run["pace"])
+            "pace": show_pace(run["pace"]),
+            "distance": run["distance"],
+            "calories": run["calories"],
+            "elevation": run["elevation"],
+            "temperature": run["temperature"],
+            "heartrate_avg": run["heartrate_avg"]
         })
 
     return render_template("history.html",
