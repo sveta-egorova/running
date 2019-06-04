@@ -53,7 +53,8 @@ historyRepo = HistoryRepository(db)
 @app.route("/", methods=["GET"])
 def index():
     """Show welcome page"""
-
+    if session.get("user_id"):
+        return redirect("/main")
     return render_template("index.html")
 
 
@@ -62,7 +63,76 @@ def index():
 def main():
     """Show information about the user's runs"""
 
-    return render_template("main.html")
+    # get user IP and find respective location, weather and timezone information
+    user_ip = request.remote_addr
+    # if the application is run locally, replace the internal IP with the external one
+    if user_ip == "127.0.0.1":
+        user_ip = "151.36.210.23"
+    location_object = get_location_by_ip(user_ip)
+    weather_now = check_weather(location_object["latitude"], location_object["longitude"])
+    location_now = location_object["city"] + ", " + location_object["country"]
+    user_timezone_string = weather_now["timezone"]
+
+    # based on the user timezone and current time, create a datetime object to reflect on the interface and
+    # aggregate runs
+    user_timezone_object = timezone(user_timezone_string)
+    cur_datetime = datetime.datetime.now(tz=user_timezone_object)
+    cur_date = cur_datetime.date()
+    cur_week = cur_date.strftime("%W")
+
+    # data about latest run
+    runs = historyRepo.get_runs_by_user_id(session["user_id"])
+    zero_timestamp = datetime.datetime.min.timestamp()
+    latest_run = {}
+    km_in_month = 0
+    km_in_week = 0
+    for run in runs:
+
+        # gather information about the run
+        run_distance = run["distance"]
+        run_timestamp = run["date"]
+        run_datetime = datetime.datetime.fromtimestamp(run_timestamp, tz=timezone(run["timezone"]))
+        run_date = run_datetime.date()
+
+        # check if the run should be added to total distance of this month
+        run_month = run_datetime.month
+        if run_month == cur_datetime.month:
+            km_in_month += run_distance
+
+        # check if the run should be added to total distance of this week
+        run_week = run_date.strftime("%W")
+        if run_week == cur_week:
+            km_in_week += run_distance
+
+        # find out whether this run is the latest, and initialize object latest_run
+        if run_timestamp > zero_timestamp:
+            latest_run = {
+                "distance": run_distance,
+                "calories": run["calories"],
+                "pace": show_pace(run["pace"]),
+                "date": run_date
+            }
+            zero_timestamp = run_timestamp
+
+    # find out the number of days elapsed since the last run
+    delta_days = cur_date - latest_run["date"]
+    delta_message = ""
+    if delta_days.days == 0:
+        delta_message = "today"
+    elif delta_days.days == 1:
+        delta_message = "yesterday"
+    elif delta_days.days > 1:
+        delta_message = f"{delta_days.days} days ago"
+
+    # TODO add data about next run according to the program
+
+    return render_template("main.html",
+                           location=location_now,
+                           weather=weather_now,
+                           latest_run=latest_run,
+                           when=delta_message,
+                           total_week=km_in_week,
+                           total_month=km_in_month)
 
 
 @app.route("/info", methods=["GET"])

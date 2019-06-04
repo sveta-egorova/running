@@ -6,9 +6,45 @@
 
 {% block main %}
 
-    <div class="container p-5">
-        <h1>Your activity</h1>
-        Some data about the user activity
+    <p class="text-main-line except-main">Here is your main information</p>
+
+    <div class="container p-5 text-info">
+        <div class="row">
+            <div class="col-3">Location</div>
+            <div class="col-3">{{ location }}</div>
+        </div>
+        <div class="row">
+            <div class="col-3">Summary</div>
+            <div class="col-3">{{ weather["summary"] }}</div>
+        </div>
+        <div class="row">
+            <div class="col-3">Temperature</div>
+            <div class="col-3">{{ weather["temperature"] }} Degrees Celcius</div>
+        </div>
+        <div class="row">
+            <div class="col-3">Humidity</div>
+            <div class="col-3">{{ weather["humidity"]*100 }} %</div>
+        </div>
+
+        <img src="/static/weather icons/{{ weather["icon"] }}.png" alt="weather-type">
+
+        <div class="row">
+            <div class="col-3">Latest run</div>
+            <div class="col-3">{{ delta_message }} </div>
+            <div class="col-3">{{ latest_run["distance"] }} </div>
+            <div class="col-3">{{ latest_run["pace"] }} </div>
+            <div class="col-3">{{ latest_run["calories"] }} </div>
+        </div>
+
+        <div class="row">
+            <div class="col-3">Km this week</div>
+            <div class="col-3">{{ total_week }} </div>
+        </div>
+        <div class="row">
+            <div class="col-3">Km this month</div>
+            <div class="col-3">{{ total_month }} </div>
+        </div>
+
     </div>
 
 {% endblock %}

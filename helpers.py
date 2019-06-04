@@ -59,7 +59,8 @@ def check_weather(latitude, longitude, timestamp=None):
             "icon": weather["currently"]["icon"],
             "temperature": weather["currently"]["temperature"],
             "humidity": weather["currently"]["humidity"],
-            "pressure": weather["currently"]["pressure"]
+            "pressure": weather["currently"]["pressure"],
+            "timezone": weather["timezone"]
         }
     except (KeyError, TypeError, ValueError):
         return None
@@ -84,6 +85,31 @@ def get_city_list(q):
         city_list = [{"value": city["name"] + ", " + city["country"], "latitude": city["latitude"],
                     "longitude": city["longitude"]} for city in cities]
         return jsonify(city_list)
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def get_location_by_ip(user_ip):
+    """Lookup the user current location based on his IP address"""
+
+# Contact API
+    url = f"https://ip-geo-location.p.rapidapi.com/ip/{user_ip}?format=json"
+    headers = {"X-RapidAPI-Host": "ip-geo-location.p.rapidapi.com",
+               "X-RapidAPI-Key": "a05c649b91msh43e569e10289861p12ff56jsn045debbbd7bc"}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
+
+    # Parse response
+    try:
+        location_input = json.loads(response.content)
+        location = {"city": location_input["city"]["name"],
+                    "country": location_input["country"]["name"],
+                    "latitude": location_input["location"]["latitude"],
+                    "longitude": location_input["location"]["longitude"]}
+        return location
     except (KeyError, TypeError, ValueError):
         return None
 
