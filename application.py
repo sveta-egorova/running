@@ -13,7 +13,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from HistoryRepository import HistoryRepository
 from UserRepository import UserRepository
-from helpers import apology, login_required, check_weather, get_city_list, count_calories, show_pace, show_duration
+from helpers import apology, login_required, check_weather, get_city_list, get_location_by_ip, count_calories, \
+    show_pace, show_duration
 
 # Set the file directory to come from the user side
 UPLOAD_FOLDER = 'photos'
@@ -49,6 +50,7 @@ Session(app)
 db = SQL("sqlite:///running.db")
 userRepo = UserRepository(db)
 historyRepo = HistoryRepository(db)
+
 
 @app.route("/", methods=["GET"])
 def index():
@@ -162,8 +164,6 @@ def weather():
         cur_weather["temperature"] = round(cur_weather["temperature"])
         return render_template("weather-now.html", weather=cur_weather, location=location)
 # TODO add units of measure
-# icon can be one of the following: clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day,
-# or partly-cloudy-night
 
 
 @app.route("/check-username")
@@ -220,7 +220,7 @@ def log_run():
 
         # TODO to check correct date and time of the run on the user interface
 
-        distance = float(request.form.get("distance")) # string
+        distance = float(request.form.get("distance"))  # string
 
         # calculate duration and pace
         hours = request.form.get("hours") or 0  # string
@@ -231,10 +231,10 @@ def log_run():
 
         # TODO autoscroll of numbers
 
-        elevation = float(request.form.get("elevation")) or 0  # string
+        elevation = int(request.form.get("elevation") or 0)  # string
 
-        heartrate_avg = int(request.form.get("heartrate_avg")) or 0  # string
-        heartrate_high = int(request.form.get("heartrate_high")) or 0  # string
+        heartrate_avg = int(request.form.get("heartrate_avg") or 0)  # string
+        heartrate_high = int(request.form.get("heartrate_high") or 0)  # string
 
         location = request.form.get("location")  # string
 
@@ -242,7 +242,7 @@ def log_run():
         latitude = request.form.get("city_latitude")
         longitude = request.form.get("city_longitude")
         cur_weather = check_weather(latitude, longitude)
-        temperature = round(cur_weather["temperature"],0)
+        temperature = round(cur_weather["temperature"], 0)
         humidity = cur_weather["humidity"]
 
         # Count calories burnt during the training
@@ -277,25 +277,23 @@ def log_run():
 def see_history():
     """Show the latest training of the user"""
 
-    runs = historyRepo.get_runs_by_id(session["user_id"])
+    runs = historyRepo.get_runs_by_user_id(session["user_id"])
 
-    run_types = {"1":"running", "2": "walking", "3": "hiking/climbing"}
+    run_types = ["", "running", "walking", "hiking/climbing"]
+    result = []
     for run in runs:
-        run_type = run["type"]
-        run["type"] = run_types[str(run_type)]
         run_timezone = timezone(run["timezone"])
         datetime_object = datetime.datetime.fromtimestamp(run["date"], tz=run_timezone)
-        run_date = datetime_object.date()
-        run["day"] = run_date
-        run_time = datetime_object.time()
-        run["time"] = run_time
-        duration_string = show_duration(run["duration"])
-        run["duration"] = duration_string
-        pace_string = show_pace(run["pace"])
-        run["pace"] = pace_string
+        result.append({
+            "type": run_types[run["type"]],
+            "day": datetime_object.date(),
+            "time": datetime_object.time(),
+            "duration": show_duration(run["duration"]),
+            "pace": show_pace(run["pace"])
+        })
 
     return render_template("history.html",
-                           runs=runs)
+                           runs=result)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -447,3 +445,7 @@ for code in default_exceptions:
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=4662)

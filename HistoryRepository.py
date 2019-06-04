@@ -29,8 +29,10 @@ class HistoryRepository:
                         longitude=longitude,
                         timezone=timezone)
 
-
-    def get_runs_by_id(self, id):
+    def get_runs_by_user_id(self, user_id):
         """Get all info from a database related to a particular username"""
-        return self.db.execute("SELECT * FROM trainings WHERE user_id = :id", id = id)
+        return self.db.execute("SELECT * FROM trainings "
+                               "WHERE user_id = :id "
+                               "ORDER BY date DESC",
+                               id=user_id)
 
