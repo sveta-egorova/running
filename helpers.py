@@ -169,9 +169,11 @@ def show_duration(total_seconds):
 
 
 def show_pace(pace):
-    minutes_per_km = int(pace / 60)
-    seconds_remainder = pace - minutes_per_km * 60
-    pace_string = str(minutes_per_km) + ":" + str(seconds_remainder) + " min/km"
+    min_per_km = int(pace / 60)
+    minutes_adj = str(min_per_km) if int(min_per_km) > 9 else "0" + str(min_per_km)
+    seconds_remainder = pace - min_per_km * 60
+    seconds_remainder_adj = str(seconds_remainder) if int(seconds_remainder) > 9 else "0" + str(seconds_remainder)
+    pace_string = minutes_adj + ":" + seconds_remainder_adj + " min/km"
     return pace_string
 
 

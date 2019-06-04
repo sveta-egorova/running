@@ -67,6 +67,7 @@ def main():
 
     location = get_location_string(request)
     weather_now = get_cur_weather(request)
+    weather_now["temperature"] = round(weather_now["temperature"])
     timezone_now = get_cur_timezone(request)
 
     # based on the user timezone and current time, create a datetime object to reflect on the interface and
@@ -118,7 +119,7 @@ def main():
         delta_message = "yesterday"
     elif delta_days.days > 1:
         delta_message = f"{delta_days.days} days ago"
-
+    # TODO fix delta_message
     # TODO add data about next run according to the program
 
     return render_template("main.html",
@@ -126,15 +127,14 @@ def main():
                            weather=weather_now,
                            latest_run=latest_run,
                            when=delta_message,
-                           total_week=km_in_week,
-                           total_month=km_in_month)
+                           total_week=round(km_in_week, 1),
+                           total_month=round(km_in_month, 1))
 
 
 @app.route("/info", methods=["GET"])
 @login_required
 def info():
     """Show information about the user"""
-    # TODO provide real arguments
 
     user = userRepo.get_info_by_id(session["user_id"])[0]
     if user["gender"] == 1:
@@ -192,7 +192,7 @@ def info():
     }
 
     return render_template("info.html", data=result)
-
+# TODO check how moment.js handles difference in dates
 
 @app.route("/weather", methods=["GET", "POST"])
 @login_required
@@ -211,7 +211,6 @@ def weather():
         cur_weather = check_weather(latitude, longitude)
         cur_weather["temperature"] = round(cur_weather["temperature"])
         return render_template("weather-now.html", weather=cur_weather, location=location)
-# TODO add units of measure
 
 
 @app.route("/check-username")
@@ -266,8 +265,6 @@ def log_run():
         run_datetime = run_timezone.localize(run_datetime_naive, is_dst=None)
         run_datetime_unix = int(time.mktime(run_datetime.timetuple()))
 
-        # TODO to check correct date and time of the run on the user interface
-
         distance = float(request.form.get("distance"))  # string
 
         # calculate duration and pace
@@ -286,7 +283,6 @@ def log_run():
 
         location = request.form.get("location")  # string
 
-        # TODO activate API data upload for temperature and humidity
         latitude = request.form.get("city_latitude")
         longitude = request.form.get("city_longitude")
         cur_weather = check_weather(latitude, longitude)
