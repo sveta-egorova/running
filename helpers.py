@@ -116,41 +116,32 @@ def get_location_by_ip(user_ip):
         return None
 
 
-def count_calories(run_type, pace, weight, seconds):
+def count_calories(run_type, run_pace, weight, seconds):
     # TODO implement MET with dict
 
-    met = 0
-    if run_type == 1:
-        if pace >= 447:
-            met = 8.3
-        elif pace >= 428:
-            met = 9
-        elif pace >= 372:
-            met = 9.8
-        elif pace >= 335:
-            met = 10.5
-        elif pace >= 316:
-            met = 11
-        elif pace >= 298:
-            met = 11.8
-        elif pace >= 279:
-            met = 11.8
-        elif pace >= 260:
-            met = 12.3
-        elif pace >= 242:
-            met = 12.8
-        elif pace >= 223:
-            met = 14.5
-        elif pace >= 205:
-            met = 16
-        elif pace >= 186:
-            met = 19
-        elif pace >= 171:
-            met = 19.8
-        elif pace >= 160:
-            met = 23
+    met_pairs = {
+        447: 8.3,
+        428: 9,
+        372: 9.8,
+        335: 10.5,
+        316: 11,
+        298: 11.8,
+        279: 11.8,
+        260: 12.3,
+        242: 12.8,
+        223: 14.5,
+        205: 16,
+        186: 19,
+        171: 19.8,
+        160: 23
+    }
 
-    calories_burnt = round(met * weight * seconds / 3600, 0)
+    if run_type == 1:
+        for pace, met in met_pairs.items():
+            if run_pace >= pace:
+                run_met = met
+
+    calories_burnt = round(run_met * weight * seconds / 3600, 0)
 
     return calories_burnt
 
