@@ -13,8 +13,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from HistoryRepository import HistoryRepository
 from UserRepository import UserRepository
-from helpers import apology, login_required, check_weather, get_city_list, get_location_by_ip, count_calories, \
-    show_pace, show_duration
+from helpers import apology, login_required, check_weather, get_city_list, count_calories, \
+    show_pace, show_duration, get_cur_timezone, get_cur_weather, get_location_string
 
 # Set the file directory to come from the user side
 UPLOAD_FOLDER = 'photos'
@@ -143,7 +143,62 @@ def info():
     """Show information about the user"""
     # TODO provide real arguments
 
-    return render_template("info.html")
+    user = userRepo.get_info_by_id(session["user_id"])[0]
+    if user["gender"] == 1:
+        gender = "male"
+    else:
+        gender = "female"
+
+    # create birthday as datetime object
+    born = datetime.datetime.strptime(user["birthday"], '%Y-%m-%d').date()
+    # create current date as datetime object
+    timezone_now = get_cur_timezone(request)
+    today = datetime.datetime.now(tz=timezone_now).date()
+
+    age = int(today.year - born.year - ((today.month, today.day) < (born.month, born.day)))
+# TODO check year difference differently
+
+    activity_level = [
+        {"value": 1, "desc": "Sitting / lying all day", "short_desc": "inactive", "activity_index": 1.2},
+        {"value": 2, "desc": "Seated work, no exercise", "short_desc": "inactive", "activity_index": 1.3},
+        {"value": 3, "desc": "Seated work, light exercise", "short_desc": "moderate", "activity_index": 1.4},
+        {"value": 4, "desc": "Moderately physical work, no exercise", "short_desc": "moderate", "activity_index": 1.5},
+        {"value": 5, "desc": "Moderately physical work, light exercise", "short_desc": "moderate", "activity_index": 1.6},
+        {"value": 6, "desc": "Moderately physical work, heavy exercise", "short_desc": "active", "activity_index": 1.7},
+        {"value": 7, "desc": "Heavy work / heavy exercise", "short_desc": "active", "activity_index": 1.8},
+        {"value": 8, "desc": "Above average physical work / exercise", "short_desc": "active", "activity_index": 2.0},
+    ]
+
+    default_activity_level = 3
+    activity_index = default_activity_level
+    activity_label = "no data"
+
+    for level in activity_level:
+        if level["value"] == user["activity_level"]:
+            activity_index = level["activity_index"]
+            activity_label = level["short_desc"]
+            break
+
+    if user["gender"] == 1:
+        bmr_index = int(13.397 * user["weight"] + 4.799 * user["height"] - 5.677 * age + 88.362)
+    else:
+        bmr_index = int(9.247 * user["weight"] + 3.098 * user["height"] - 4.330 * age + 447.593)
+
+    bmr_adjusted = int(bmr_index * activity_index)
+
+    result = {
+        "name": user["name"].upper(),
+        "username": user["username"].lower(),
+        "gender": gender,
+        "age": age,
+        "height": user["height"],
+        "weight": user["weight"],
+        "activity_label": activity_label,
+        "bmr": bmr_index,
+        "bmr_adj": bmr_adjusted
+    }
+
+    return render_template("info.html", data=result)
 
 
 @app.route("/weather", methods=["GET", "POST"])
