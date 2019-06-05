@@ -47,7 +47,7 @@ main .text-info
 
 main .col-form-label
 {
-    /* font used to log run data */
+    /* font used to run data */
     font-size: 20px;
     font-family: 'Oswald', sans-serif;
     color: #737373;

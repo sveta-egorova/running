@@ -10,41 +10,73 @@
 
     <div class="container p-5 text-info">
         <div class="row">
-            <div class="col-3">Location</div>
-            <div class="col-3">{{ location }}</div>
-        </div>
-        <div class="row">
-            <div class="col-3">Summary</div>
-            <div class="col-3">{{ weather["summary"] }}</div>
-        </div>
-        <div class="row">
-            <div class="col-3">Temperature</div>
-            <div class="col-3">{{ weather["temperature"] }} Degrees Celcius</div>
-        </div>
-        <div class="row">
-            <div class="col-3">Humidity</div>
-            <div class="col-3">{{ weather["humidity"]*100 }} %</div>
+            <div class="col-4">
+                <div class="card text-white bg-info mb-3" style="max-width: 20rem; height: 27rem;">
+                    <div class="card-header">Weather now</div>
+                    <div class="card-body">
+                        <h4 class="card-title">{{ location }}</h4>
+                        <p class="card-text">{{ weather["summary"] }} with a temperature of {{ weather["temperature"] }}
+                            Degrees Celcius, and humidity {{ weather["humidity"]*100 }} %</p>
+                        <img src="/static/weather icons/{{ weather["icon"] }}.png" alt="weather-type">
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
+                            <div class="card-header">Your last run</div>
+                            <div class="card-body">
+                                <h4 class="card-title">{{ when }}</h4>
+                                <div class="card-text">
+                                    <div> Distance: {{ latest_run["distance"] }} km</div>
+                                    <div> Average pace: {{ latest_run["pace"] }} </div>
+                                    <div> Calories burnt: {{ latest_run["calories"] }} kcal</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card text-white bg-success mb-3" style="max-width: 20rem;">
+                            <div class="card-header">Your next run</div>
+                            <div class="card-body">
+                                <h4 class="card-title">Tomorrow </h4>
+                                <div class="card-text">
+                                    <div> Type: long run</div>
+                                    <div> Duration: 2:30:00</div>
+                                    <div> Pace: medium</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card text-white bg-primary mb-3" style="max-width: 42.5rem;">
+                            <div class="card-header">Your total: {{ km_total }} km in {{ run_count }} runs</div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <div> This week: {{ total_week }} km</div>
+                                    <div> This month: {{ total_month }} km</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <img src="/static/weather icons/{{ weather["icon"] }}.png" alt="weather-type">
-
-        <div class="row">
-            <div class="col-3">Latest run</div>
-            <div class="col-3">{{ when }} </div>
-            <div class="col-3">{{ latest_run["distance"] }} km </div>
-            <div class="col-3">{{ latest_run["pace"] }} </div>
-            <div class="col-3">{{ latest_run["calories"] }} kcal </div>
-        </div>
-
-        <div class="row">
-            <div class="col-3">Km this week</div>
-            <div class="col-3">{{ total_week }} </div>
-        </div>
-        <div class="row">
-            <div class="col-3">Km this month</div>
-            <div class="col-3">{{ total_month }} </div>
-        </div>
+{##}
+{#        <div class="row">#}
+{#            <div class="col-3">Km this week</div>#}
+{#            <div class="col-3">{{ total_week }} </div>#}
+{#        </div>#}
+{#        <div class="row">#}
+{#            <div class="col-3">Km this month</div>#}
+{#            <div class="col-3">{{ total_month }} </div>#}
+{#        </div>#}
 
     </div>
+
 
 {% endblock %}

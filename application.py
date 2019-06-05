@@ -78,14 +78,17 @@ def main():
 
     # data about latest run
     runs = historyRepo.get_runs_by_user_id(session["user_id"])
+    run_count = len(runs)
     zero_timestamp = 0
     latest_run = {}
     km_in_month = 0
     km_in_week = 0
+    km_total = 0
     for run in runs:
 
         # gather information about the run
         run_distance = run["distance"]
+        km_total += run_distance
         run_timestamp = run["date"]
         run_datetime = datetime.datetime.fromtimestamp(run_timestamp, tz=timezone(run["timezone"]))
         run_date = run_datetime.date()
@@ -128,7 +131,9 @@ def main():
                            latest_run=latest_run,
                            when=delta_message,
                            total_week=round(km_in_week, 1),
-                           total_month=round(km_in_month, 1))
+                           total_month=round(km_in_month, 1),
+                           km_total=round(km_total, 1),
+                           run_count=run_count)
 
 
 @app.route("/info", methods=["GET"])
