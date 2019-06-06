@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User programs
+{% endblock %}
+{% block main %}
+
+    <p class="text-main-line except-main">The list of your programs</p>
+    <div class="container p-5">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Created by</th>
+                <th scope="col">Name</th>
+                <th scope="col">Number of weeks</th>
+                <th scope="col">Description / tags</th>
+                <th scope="col">Goal</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in programs %}
+                <tr>
+
+                    <td> {{ item['id'] }} </td>
+                    <td> {{ item['author'] }} </td>
+                    <td> {{ item['name'] }} </td>
+                    <td> {{ item['weeks'] }} </td>
+                    <td> {{ item['description'] }} </td>
+                    <td> {{ item['goal'] }} </td>
+                    <td> {{ item['status'] }} </td>
+                    <td><a href="#" class="badge badge-info">View</a><br>
+                        <a href="#" class="badge badge-success">Activate</a><br>
+                        <a href="#" class="badge badge-warning">Edit</a><br>
+                        <a href="#" class="badge badge-secondary">Unfollow</a><br>
+                        <a href="#" class="badge badge-dark">Delete</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="/create-program" class="badge badge-primary">Create program</a>
+
+    </div>
+
+{% endblock %}

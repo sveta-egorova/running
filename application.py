@@ -12,6 +12,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from HistoryRepository import HistoryRepository
+from ProgramRepository import ProgramRepository
 from UserRepository import UserRepository
 from helpers import apology, login_required, check_weather, get_city_list, count_calories, \
     show_pace, show_duration, get_cur_timezone, get_cur_weather, get_location_string
@@ -50,6 +51,7 @@ Session(app)
 db = SQL("sqlite:///running.db")
 userRepo = UserRepository(db)
 historyRepo = HistoryRepository(db)
+programRepo = ProgramRepository(db)
 
 
 @app.route("/", methods=["GET"])
@@ -198,6 +200,60 @@ def info():
 
     return render_template("info.html", data=result)
 # TODO check how moment.js handles difference in dates
+
+
+@app.route("/programs", methods=["GET"])
+@login_required
+def show_programs():
+    """Show information about the programs that the user follows"""
+    programs = programRepo.get_prog_by_id(session["user_id"])
+
+    goals = ["", "Start running", "Keep fit", "Loose weight", "Run 10k", "Run half marathon", "Run marathon", "Other"]
+    status = ["inactive", "active"]
+
+    result = []
+    for program in programs:
+        result.append({
+            "id": program["id"],
+            "author": userRepo.get_info_by_id(program["author_id"])[0]["username"],
+            "name": program["prog_name"],
+            "weeks": program["weeks"],
+            "description": program["description"],
+            "goal": goals[program["goal"]],
+            "status": status[program["status"]]
+                      })
+# TODO view - only if details available
+# TODO check buttons: activate - only one at a time, and ask for a starting date, add the entry to database
+    # TODO may be several at a time if do not intersect
+# TODO edit - add additional details about the program
+    # TODO unfollow - does not make sense if your program
+    # TODO delete - ask for user confirmation
+
+    return render_template("programs.html", programs=result)
+
+
+@app.route("/create-program", methods=["GET", "POST"])
+@login_required
+def create_program():
+    """Create a program"""
+
+    # User reached route via GET (as by submitting a form via GET)
+    if request.method == "GET":
+        return render_template("create-program.html")
+
+    # User reached route via POST (as by submitting a form via POST)
+    else:
+
+        # Add program to database
+        programRepo.create_program(session["user_id"],
+                                   request.form.get("prog-name"),
+                                   int(request.form.get("weeks")),
+                                   request.form.get("description"),
+                                   int(request.form.get("goal")))
+
+        return redirect("/programs")
+
+
 
 @app.route("/weather", methods=["GET", "POST"])
 @login_required

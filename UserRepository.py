@@ -6,14 +6,14 @@ class UserRepository:
         """Add a new user with his credentials to the database"""
         self.db.execute("INSERT INTO users (username, hash, name, birthday, gender, height, weight, activity_level) "
                         "VALUES(:username, :hash, :name, :birthday, :gender, :height, :weight, :activity_level)",
-                username=username,
-                hash=hash,
-                name=name,
-                birthday=birthday,
-                gender=gender,
-                height=height,
-                weight=weight,
-                activity_level=activity_level)
+                        username=username,
+                        hash=hash,
+                        name=name,
+                        birthday=birthday,
+                        gender=gender,
+                        height=height,
+                        weight=weight,
+                        activity_level=activity_level)
 
     def get_info_by_username(self, username):
         """Get all info from a database related to a particular username"""

@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Create program
+{% endblock %}
+
+
+{% block main %}
+    <p class="text-main-line except-main">Create your program</p>
+    <div class="container p-5 under-main-line">
+        <form action="/create-program" method="post">
+
+            <div class="form-group row">
+                <label for="prog-name-input" class="col-3 col-form-label">Program name</label>
+                <div class="col-9">
+                    <input autocomplete="off" class="form-control log-run-forms" name="prog-name" type="text"
+                           id="prog-name-input" placeholder="eg. 4-month prep for big run">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="weeks_input" class="col-3 col-form-label">Length (in weeks)</label>
+                <div class="col-9">
+                    <input autocomplete="off" class="form-control log-run-forms" name="weeks" type="number"
+                           id="weeks_input">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="description-input" class="col-3 col-form-label">Program description</label>
+                <div class="col-9">
+                    <input autocomplete="off" class="form-control log-run-forms" name="description" type="text"
+                           id="description-input"
+                           placeholder="eg. 4 times a week: one long distance, one interval and two normal trainings,
+                           ending with a half marathon with a goal of 1:40:00">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="goal_input" class="col-3 col-form-label">Goal</label>
+                <div class="col-9">
+                    <select class="form-control" id="goal_input" name="goal">
+                        <option selected>Choose...</option>
+                        <option value="1">Start running</option>
+                        <option value="2">Keep fit</option>
+                        <option value="3">Loose weight</option>
+                        <option value="4">Run 10k</option>
+                        <option value="5">Run half marathon</option>
+                        <option value="6">Run marathon</option>
+                        <option value="7">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn btn-primary button-coral" id="button_register" type="submit">Submit</button>
+
+        </form>
+    </div>
+
+{% endblock %}
