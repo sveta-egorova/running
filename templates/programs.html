@@ -17,6 +17,8 @@
                 <th scope="col">Description / tags</th>
                 <th scope="col">Goal</th>
                 <th scope="col">Status</th>
+                <th scope="col">Start date</th>
+                <th scope="col">End date</th>
                 <th scope="col">Actions</th>
             </tr>
             </thead>
@@ -31,11 +33,17 @@
                     <td> {{ item['description'] }} </td>
                     <td> {{ item['goal'] }} </td>
                     <td> {{ item['status'] }} </td>
-                    <td><a href="#" class="badge badge-info">View</a><br>
-                        <a href="#" class="badge badge-success">Activate</a><br>
-                        <a href="#" class="badge badge-warning">Edit</a><br>
-                        <a href="#" class="badge badge-secondary">Unfollow</a><br>
-                        <a href="#" class="badge badge-dark">Delete</a></td>
+                    <td> {{ item['date_start'] }} </td>
+                    <td> {{ item['date_end'] }} </td>
+
+                    <td><a href="#{{ item['id'] }}" class="badge badge-info">View</a><br>
+                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                onclick="saveId({{ item['id'] }})"
+                                data-target="#statusModal">
+                            Activate</button>
+                        <a href="#{{ item['id'] }}" class="badge badge-warning">Edit</a><br>
+                        <a href="#{{ item['id'] }}" class="badge badge-secondary">Unfollow</a><br>
+                        <a href="#{{ item['id'] }}" class="badge badge-dark">Delete</a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -43,6 +51,51 @@
 
         <a href="/create-program" class="badge badge-primary">Create program</a>
 
+        <!-- Modal -->
+        <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="statusModalLabel">Start date</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/initiate-program" method="post" id="program_start_form">
+                            <div class="form-group row">
+                                <label for="date_input" class="col-3 col-form-label">Start date</label>
+                                <div class="col-9">
+                                    <input autocomplete="off" autofocus class="form-control"
+                                           name="date"
+                                           type="date" id="date_input">
+                                    <input name="prog-id" id="prog-id" hidden>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" type="submit" onclick="form_submit()"
+                        Activate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+
+    function saveId(id) {
+        console.log("receive id " + id);
+        document.getElementById("prog-id").value = id;
+    }
+
+    function form_submit() {
+        document.getElementById("program_start_form").submit();
+   }
+
+    </script>
 
 {% endblock %}

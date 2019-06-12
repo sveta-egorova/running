@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 import time
+from datetime import timedelta
 from tempfile import mkdtemp
 
 from cs50 import SQL
@@ -206,13 +207,28 @@ def info():
 @login_required
 def show_programs():
     """Show information about the programs that the user follows"""
-    programs = programRepo.get_prog_by_id(session["user_id"])
+    programs = programRepo.get_prog_by_follower_id(session["user_id"])
 
     goals = ["", "Start running", "Keep fit", "Loose weight", "Run 10k", "Run half marathon", "Run marathon", "Other"]
-    status = ["inactive", "active"]
+    statuses = ["inactive", "active"]
+
+    # TODO upload status and date
 
     result = []
     for program in programs:
+        status_for_user = programRepo.get_status_by_id(session["user_id"], program["id"])
+        if status_for_user:
+            status = status_for_user[0]["status"]
+            if status_for_user[0]["date_start"]:
+                date_start = datetime.datetime.fromtimestamp(int(status_for_user[0]["date_start"])).date()
+                date_end = datetime.datetime.fromtimestamp(int(status_for_user[0]["date_end"])).date()
+            else:
+                date_start = "n/a"
+                date_end = "n/a"
+        else:
+            status = 0
+            date_start = "n/a"
+            date_end = "n/a"
         result.append({
             "id": program["id"],
             "author": userRepo.get_info_by_id(program["author_id"])[0]["username"],
@@ -220,8 +236,11 @@ def show_programs():
             "weeks": program["weeks"],
             "description": program["description"],
             "goal": goals[program["goal"]],
-            "status": status[program["status"]]
+            "status": statuses[status],
+            "date_start": date_start,
+            "date_end": date_end
                       })
+# TODO upload status from a different db
 # TODO view - only if details available
 # TODO check buttons: activate - only one at a time, and ask for a starting date, add the entry to database
     # TODO may be several at a time if do not intersect
@@ -253,6 +272,37 @@ def create_program():
 
         return redirect("/programs")
 
+
+@app.route("/initiate-program", methods=["POST"])
+@login_required
+def initiate_program():
+    """Initiates a program ofr a user"""
+    #
+    # # User reached route via GET (as by submitting a form via GET)
+    # if request.method == "GET":
+    #     return render_template("initiate-program.html") #  check how to return form in a window
+
+    # User reached route via POST (as by submitting a form via POST)
+    # else:
+    program_id = request.form.get("prog-id")
+    weeks = programRepo.get_prog_by_id(program_id)[0]["weeks"]
+    days = weeks * 7
+    date_start_string = request.form.get("date")
+
+    date_start = datetime.datetime.strptime(date_start_string, '%Y-%m-%d').date()
+    date_start_unix = int(time.mktime(date_start.timetuple()))
+    date_end = date_start + timedelta(days=days)
+    date_end_unix = int(time.mktime(date_end.timetuple()))
+
+    # Update a status of a program in a database
+    programRepo.initiate_program(session["user_id"],
+                                 program_id,
+                                 date_start_unix,
+                                 date_end_unix)
+
+    return redirect("/programs")
+
+    # return jsonify({"status":"ok"})
 
 
 @app.route("/weather", methods=["GET", "POST"])
