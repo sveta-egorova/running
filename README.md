@@ -97,14 +97,19 @@ Some data about the user are calculated automatically by the program:
 
 1. Create account. The system will check whether you choose a valid name and password, then it will redirect the user to the main page. Passwords are securely stored in the encrypted form in a database
  ![pic1](/docs/Picture1.png)
+
 1. If the profile already exists, the user will simply log in using his/her credentials
  ![pic2](/docs/Picture2.png)
+ 
 1. The user can view the main page with some information about his current location/weather and some running statistics such as details of last run, next run (if the program is activated), and logged runs in the past
  ![pic3](/docs/Picture3.png)
+
 1. The user can add a new run by including the relevant data about it
  ![pic4](/docs/Picture4.png)
+
 1. The user can view the run history in descending order (from the latest to the oldest) that includes, among other things, some automatically generated information, such as average pace, calories burnt, temperature on the street during the run
  ![pic5](/docs/Picture5.png)
+
 1. The user can create a program and the activate/disactivate it, if he wants to start following it from a specific date, and to see reminders on the man page
  ![pic6](/docs/Picture6.png)
 
