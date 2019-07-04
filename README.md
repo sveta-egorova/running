@@ -20,10 +20,10 @@ Front-end is mostly based on Bootstrap libraries with a bit of personal touch.
 
 The server side is divided into several python files:
 
-- _application.py_ – the main directory used by Flask that outlines the website architecture and the way how the server should respond to different kinds of user requests to different links, as well as correctly handling POST requests and saving information
-- _running.db_ – the database file maintaining all information about users, their trainings and programs
-- _helpers.py_ – the file containing definition of various functions called from application.py that does not work with the database
-- _userRepository.py, historyRepository.py, programHistory.py –_ the files containing definition of various functions called from application.py that deal with the database (respectively, the part including user data, run data, and program data) _ _
+- `application.py` – the main directory used by Flask that outlines the website architecture and the way how the server should respond to different kinds of user requests to different links, as well as correctly handling POST requests and saving information
+- `running.db` – the database file maintaining all information about users, their trainings and programs
+- `helpers.py` – the file containing definition of various functions called from application.py that does not work with the database
+- `userRepository.py`, `historyRepository.py`, `programHistory.py` – the files containing definition of various functions called from application.py that deal with the database (respectively, the part including user data, run data, and program data)
 
 # Code example
 
