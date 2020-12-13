@@ -6,15 +6,11 @@ RunPal is a web application about running designed for people who wish to keep t
 
 What makes this project different from many other similar applications aimed at training logs (e.g. Nike Running, Runtastic, etc) is the possibility to create your own running programs, follow the programs created by others, edit them and use them in a more flexible way.
 
-# Build status
-
-The project is at the phase of continuous integration, bug fixes and features adding.
-
 # Technical description / framework used
 
 The web-application is driven on Flask framework with a backend written in Python using several free APIs (e.g. location by IP-address, geolocation data by coordinates, current and historical weather conditions by coordinates, and timestamp) and a built-in database keeping track of users, runs and programs.
 
-Front-end is mostly based on Bootstrap libraries with a bit of personal touch.
+Front-end is mostly based on Bootstrap with a bit of personal touch.
 
 # Code design
 
@@ -52,7 +48,7 @@ def create_program():
 
 # Installation
 
-In order to install the project, one should run the command flask run.
+In order to install the project, one should run the command `flask run`.
 
 # Requirements
 
@@ -84,7 +80,7 @@ Some data about the user are calculated automatically by the program:
 
 
 
-# External graphics / Front end
+# Front-end
 
 - Main picture is taken from personal archives
 - Front end is mainly inspired by Bootstrap with certain customization where necessary
@@ -115,4 +111,4 @@ Some data about the user are calculated automatically by the program:
 
 # Credits
 
-Big thank you goes to all organizers of CS50 course who opened the new programming world for me, and my dearest Ernest Sadykov who is supporting me in everything that I am doing
+Big thank you goes to all organizers of CS50 course who opened the new programming world for me
